@@ -145,6 +145,14 @@ setTimeout() {
     fi
 }
 
+updatePort() {
+    if [[ -n "$PORT" ]]; then
+        sed -i -e"s/^Port 8888/Port $PORT/" /etc/tinyproxy/tinyproxy.conf
+        checkStatus $? "Updating Port - Could not edit $PROXY_CONF" \
+                       "Set Port to $PORT - Edited $PROXY_CONF successfully."
+    fi
+}
+
 startService() {
     screenOut "Starting Tinyproxy service..."
     /usr/bin/tinyproxy
@@ -179,6 +187,8 @@ setAuth
 setFilter
 # Set Timeout (if any)
 setTimeout
+# Update Port (if specified)
+updatePort
 # Enable log to file
 enableLogFile
 # Start Tinyproxy
